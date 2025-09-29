@@ -73,14 +73,14 @@ print(row_sums(lst9))
 
 def col_sums(matrix):
     if not matrix:
-        return []
-    row_first = len(matrix[0])
+        return []              # проверка 
+    row_first = len(matrix[0])    
     for r in matrix:
         if len(r) != row_first:
             return ValueError('рванная')
     num_cols = len(matrix[0])
     res = []
-    for col_index in range(num_cols):
+    for col_index in range(num_cols):      # тоже самое, что и в поиске суммы строки, только наоборот 
         col_sum = 0
         for r in matrix:
             col_sum += r[col_index]

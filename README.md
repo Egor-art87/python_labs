@@ -95,7 +95,7 @@ def raspl_row_major(elementary_list):
     return result
 ```
 
-![Вывод_задача1](/images/lab02/01.png)
+![Вывод_задача_A](/images/lab02/01.png)
 
 ## Задача B
 
@@ -144,3 +144,46 @@ ef row_sums(matr):
         sums.append(row_sum)   # добавляю в конечный список 
     return sums     # возвращаю результат 
 ```
+
+### 3 пункт 
+
+markdown
+```python
+def col_sums(matrix):
+    if not matrix:
+        return []              # проверка условий 
+    row_first = len(matrix[0])    
+    for r in matrix:
+        if len(r) != row_first:
+            return ValueError('рванная')
+    num_cols = len(matrix[0])
+    res = []
+    for col_index in range(num_cols):      # тоже самое, что и в поиске суммы строки, только наоборот 
+        col_sum = 0
+        for r in matrix:
+            col_sum += r[col_index]
+        res.append(col_sum)
+    return res
+```
+
+![Вывод_задача_B](/images/lab02/02.png)
+
+## Задача C
+
+markdown
+```python
+def string(x):
+    if len(x[0]) == 0 or len(x[1]) == 0 or len(str(x[2])) == 0:   # провекра на заполнение всех полей 
+        return ValueError('Проверьте заполнение всех полей')
+    lenal = str(x[0]).split()     # удаляю лишние пробелы 
+    if len(lenal) > 2:
+        fio = str(x[0]).title().strip()     # использую методы работы со строками 
+        fio = fio.split() 
+        return f'{fio[0]} {fio[1][0]}. {fio[2][0]}., гр. {x[1]}, GPA {x[-1]:.2f}'
+    else:
+        fio = str(x[0]).title().strip()
+        fio = fio.split()                  # расматриваю случай, в котором ФИО записаны двумя словами 
+        return f'{fio[0]} {fio[1][0]}, гр. {x[1]}, GPA {x[-1]:.2f}' # возвращаю результат 
+```
+
+![Вывод_задача_C](/images/lab02/03.png)
