@@ -20,8 +20,8 @@ list12 = [[1], [], [2, 3]] # [1, 2, 3]
 list13 = [[1, 2], "ab"] # TypeError
 
 # 1
-def min_max_iz_spiska(my_list):
-    if len(my_list) > 0:
+def min_max_iz_spiska(my_list): 
+    if len(my_list) > 0:          
         my_list = sorted(my_list)
         minn = my_list[-1]
         maxx = my_list[0]
@@ -31,7 +31,8 @@ def min_max_iz_spiska(my_list):
         return tuple(min_max)
     else:
         return ValueError
-
+    
+print('min_max')
 print(min_max_iz_spiska(list1))
 print(min_max_iz_spiska(list2))
 print(min_max_iz_spiska(list3))
@@ -39,6 +40,7 @@ print(min_max_iz_spiska(list4))
 print(min_max_iz_spiska(list5))
 
 #2
+print('unique_sorted')
 print(list(sorted(dict.fromkeys(list6))))
 print(list(sorted(dict.fromkeys(list7))))
 print(list(sorted(dict.fromkeys(list8))))
@@ -54,6 +56,7 @@ def raspl_row_major(elementary_list):
             return TypeError(f'Элемент {i} не является списком или кортежем')
     return result
 
+print('flatten')
 print(raspl_row_major(list10))
 print(raspl_row_major(list11))
 print(raspl_row_major(list12))

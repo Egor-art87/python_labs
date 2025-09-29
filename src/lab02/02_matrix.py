@@ -40,6 +40,7 @@ def transpose_compact(mat):
         res.append(new_row)
     return res
 
+print('transpose')
 print(transpose_compact(lst1))
 print(transpose_compact(lst2))
 print(transpose_compact(lst3))
@@ -62,6 +63,7 @@ def row_sums(matr):
         sums.append(row_sum)
     return sums
 
+print('row_sums')
 print(row_sums(lst6))
 print(row_sums(lst7))
 print(row_sums(lst8))
@@ -85,6 +87,7 @@ def col_sums(matrix):
         res.append(col_sum)
     return res
 
+print('col_sums')
 print(col_sums(lst10))
 print(col_sums(lst11))
 print(col_sums(lst12))
