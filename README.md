@@ -45,7 +45,7 @@
 
 # lab02
 
-## Задача 1
+## Задача A
 
 ### 1 пункт
 
@@ -65,3 +65,36 @@ def min_max_iz_spiska(my_list):
     else:
         return ValueError
 ```
+
+### 2 пункт
+
+Использую встроенные функции и методы
+
+markdown
+```python
+print('unique_sorted')
+print(list(sorted(dict.fromkeys(list6))))
+print(list(sorted(dict.fromkeys(list7))))
+print(list(sorted(dict.fromkeys(list8))))
+print(list(sorted(dict.fromkeys(list9))))
+```
+
+### 3 пункт 
+
+Создаю пустой список, прохожусь по элементом первоначального списка, если i является списком или кортежем, добавляю её в пустой список. Иначе - ошибка  
+
+markdown
+```python
+def raspl_row_major(elementary_list):
+    result = []
+    for i in elementary_list:
+        if isinstance(i, (list, tuple)):
+            result.extend(i)
+        else:
+            return TypeError(f'Элемент {i} не является списком или кортежем')
+    return result
+```
+
+![Вывод_задача1](/images/lab02/01.png)
+
+## Задача B
