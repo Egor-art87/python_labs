@@ -30,15 +30,15 @@ def transpose_compact(mat):
         # формирую новую матрицу 
     res = []               # создаю пустой список 
     # определяю размеры исходной матрицы 
-    num_cols = len(mat[0])  
-    num_rows = len(mat)
+    num_cols = len(mat[0])  # кол-во столбцов 
+    num_rows = len(mat)     # кол-во строк
 
-    for col in range(num_cols):
-        new_row = []
-        for row in range(num_rows):
-            new_row.append(mat[row][col])
-        res.append(new_row)
-    return res
+    for col in range(num_cols): # прохожусь по всем стодбцам 
+        new_row = []  # промежуточный список 
+        for row in range(num_rows):  # прохожусь по всем строкам 
+            new_row.append(mat[row][col])  # добавляю в новый список строки и стобцы 
+        res.append(new_row) # добавляю промежуточный списко в конечный 
+    return res   # возвращаю результат 
 
 print('transpose')
 print(transpose_compact(lst1))
@@ -48,20 +48,20 @@ print(transpose_compact(lst4))
 print(transpose_compact(lst5))
 
 # 2
-def row_sums(matr):
-    if not matr:
-        return []
-    row1 = len(matr[0])
-    for i in matr:
-        if len(i) != row1:
+def row_sums(matr):  
+    if not matr:      # проверяю матрицу на пустоту 
+        return []      # возвращаю пустой списк 
+    row1 = len(matr[0])     
+    for i in matr:            # проверка на рванность 
+        if len(i) != row1:      
             return ValueError('Рванная матрица')
-    sums = []
-    for rows in matr:
-        row_sum = 0
-        for element in rows:
-            row_sum += element
-        sums.append(row_sum)
-    return sums
+    sums = []              
+    for rows in matr:      # прохожусь по строкам 
+        row_sum = 0      # счетчик
+        for element in rows:    # прохожусь по каждому значению строки 
+            row_sum += element  # добавляю его в счетчик 
+        sums.append(row_sum)   # добавляю в конечный список 
+    return sums     # возвращаю результат 
 
 print('row_sums')
 print(row_sums(lst6))
