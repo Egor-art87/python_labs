@@ -51,7 +51,7 @@
 
 Проверяю, что списко больше 0, если он больше нуля программа возвращает кортеж с мин и макс. Иначе выдаст ошибку. 
 
-markdown
+
 ```python
 def min_max_iz_spiska(my_list): 
     if len(my_list) > 0:          
@@ -70,7 +70,7 @@ def min_max_iz_spiska(my_list):
 
 Использую встроенные функции и методы
 
-markdown
+
 ```python
 print('unique_sorted')
 print(list(sorted(dict.fromkeys(list6))))
@@ -83,7 +83,7 @@ print(list(sorted(dict.fromkeys(list9))))
 
 Создаю пустой список, прохожусь по элементом первоначального списка, если i является списком или кортежем, добавляю её в пустой список. Иначе - ошибка  
 
-markdown
+
 ```python
 def raspl_row_major(elementary_list):
     result = []
@@ -101,7 +101,7 @@ def raspl_row_major(elementary_list):
 
 ### 1 пункт
 
-markdown
+
 ```python
 def transpose_compact(mat):
     if not mat:
@@ -127,7 +127,7 @@ def transpose_compact(mat):
 
 ### 2 пункт
 
-markdown
+
 ```python
 ef row_sums(matr):  
     if not matr:      # проверяю матрицу на пустоту 
@@ -147,7 +147,7 @@ ef row_sums(matr):
 
 ### 3 пункт 
 
-markdown
+
 ```python
 def col_sums(matrix):
     if not matrix:
@@ -170,7 +170,7 @@ def col_sums(matrix):
 
 ## Задача C
 
-markdown
+
 ```python
 def string(x):
     if len(x[0]) == 0 or len(x[1]) == 0 or len(str(x[2])) == 0:   # провекра на заполнение всех полей 
