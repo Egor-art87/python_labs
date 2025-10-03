@@ -129,7 +129,7 @@ def transpose_compact(mat):
 
 
 ```python
-ef row_sums(matr):  
+def row_sums(matr):  
     if not matr:      # проверяю матрицу на пустоту 
         return []      # возвращаю пустой списк 
     row1 = len(matr[0])     
