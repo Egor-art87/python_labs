@@ -41,11 +41,14 @@ print(min_max_iz_spiska(list5))
 
 #2
 print('unique_sorted')
-print(list(sorted(dict.fromkeys(list6))))
-print(list(sorted(dict.fromkeys(list7))))
-print(list(sorted(dict.fromkeys(list8))))
-print(list(sorted(dict.fromkeys(list9))))
 
+def unique_sorted(nums: list[float | int]) -> list[float | int]:
+    print(list(sorted(dict.fromkeys(nums))))
+    
+unique_sorted(list6)
+unique_sorted(list7)
+unique_sorted(list8)
+unique_sorted(list9)
 #3
 def raspl_row_major(elementary_list):
     result = []

@@ -73,10 +73,14 @@ def min_max_iz_spiska(my_list):
 
 ```python
 print('unique_sorted')
-print(list(sorted(dict.fromkeys(list6))))
-print(list(sorted(dict.fromkeys(list7))))
-print(list(sorted(dict.fromkeys(list8))))
-print(list(sorted(dict.fromkeys(list9))))
+
+def unique_sorted(nums: list[float | int]) -> list[float | int]:
+    print(list(sorted(dict.fromkeys(nums))))
+    
+unique_sorted(list6)
+unique_sorted(list7)
+unique_sorted(list8)
+unique_sorted(list9)
 ```
 
 ### 3 пункт 
@@ -172,18 +176,22 @@ def col_sums(matrix):
 
 
 ```python
-def string(x):
-    if len(x[0]) == 0 or len(x[1]) == 0 or len(str(x[2])) == 0:   # провекра на заполнение всех полей 
+def format_record(rec: tuple[str, str, float]) -> str:
+    if not isinstance(rec, tuple):
+        return TypeError('Не кортеж')
+    if not isinstance(rec[2], float):
+        return TypeError('Должен быть float')   
+    if len(rec[0]) == 0 or len(rec[1]) == 0 or len(str(rec[2])) == 0:   # провекра на заполнение всех полей 
         return ValueError('Проверьте заполнение всех полей')
-    lenal = str(x[0]).split()     # удаляю лишние пробелы 
-    if len(lenal) > 2:
-        fio = str(x[0]).title().strip()     # использую методы работы со строками 
-        fio = fio.split() 
-        return f'{fio[0]} {fio[1][0]}. {fio[2][0]}., гр. {x[1]}, GPA {x[-1]:.2f}'
-    else:
-        fio = str(x[0]).title().strip()
+    lenal = str(rec[0]).split()     # удаляю лишние пробелы 
+    if len(lenal) == 3:
+        fio = str(rec[0]).title().strip()     # использую методы работы со строками 
+        fio = fio.split()
+        return f'{fio[0]} {fio[1][0]}. {fio[2][0]}., гр. {rec[1]}, GPA {rec[-1]:.2f}'
+    elif len(lenal) == 2:
+        fio = str(rec[0]).title().strip()
         fio = fio.split()                  # расматриваю случай, в котором ФИО записаны двумя словами 
-        return f'{fio[0]} {fio[1][0]}, гр. {x[1]}, GPA {x[-1]:.2f}' # возвращаю результат 
+        return f'{fio[0]} {fio[1][0]}, гр. {rec[1]}, GPA {rec[-1]:.2f}'
 ```
 
 ![Вывод_задача_C](/images/lab02/03.png)
