@@ -195,3 +195,171 @@ def format_record(rec: tuple[str, str, float]) -> str:
 ```
 
 ![Вывод_задача_C](/images/lab02/03.png)
+
+
+# lab03
+
+## задача А
+
+### normalize
+```python
+normalize_test_case = [
+ "ПрИвЕт\nМИр\t",      # "привет мир"
+  "ёжик, Ёлка",        # "ежик, елка"
+  "Hello\r\nWorld",    # "hello world"
+  "  двойные   пробелы  "    # "двойные пробелы"
+]
+
+
+def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
+    control_character = ['\n', '\t', '\r']
+    for char in control_character:
+        text = text.replace(char, ' ')   # если встречается один из символов, меняем его на пробел
+    words = text.split() 
+    text = ' '.join(words)    # убираем лишние пробелы
+
+    if yo2e:
+        text = text.replace('ё', 'е').replace('Ё', 'Е')  # Замена ё на е
+
+    if casefold:
+        text = text.casefold()  # перевод в нижний регистр 
+    
+    return text
+
+for i in normalize_test_case:
+    print(f'"{i}" -> "{normalize(i)}"')     # вывод
+```
+## Вывод
+![Вывод_normalize](/images/lab03/01.png)
+
+### tokenize
+```python
+tokonize_test_case = [
+  "привет мир",        # ["привет", "мир"
+  "hello,world!!!",    # ["hello", "world"]
+  "по-настоящему круто", # ["по-настоящему", "круто"]
+  "2025 год",          # ["2025", "год"]
+  "emoji 😀 не слово"   # ["emoji", "не", "слово"]
+]
+
+
+
+def tokenize(text: str) -> list[str]:
+    import re
+    
+    p = r'\w+(?:-\w+)*'
+    tokens = re.findall(p, text) # проверяем совпадения в нашей строке и возвращаем их список
+    return tokens
+
+for i in tokonize_test_case:
+    print(tokenize(i))
+```
+## Вывод
+![Вывод_tokenize](/images/lab03/02.png)
+
+### count_freq_top_n
+```python
+count_freq_and_top_n = [
+    ["a","b","a","c","b","a"],
+    ["bb","aa","bb","aa","cc"],
+]
+
+def count_freg(tokens: list[str]) -> dict[str, int]:
+    from collections import Counter
+   
+    return dict(Counter(tokens)) # считаем частоты элементов 
+
+def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
+    my_list = list(freq.items())
+
+    def sort_po_alfavity(key_v):
+        return key_v[0]
+    my_list.sort(key=sort_po_alfavity)
+
+    def sort_po_num(key_v):
+        return key_v[1]
+    my_list.sort(key=sort_po_num, reverse=True)
+
+    return my_list[:n]
+
+
+for tokens in count_freq_and_top_n:
+    freq_dict = count_freg(tokens) 
+    print(f"Частоты: {freq_dict}")
+    print(f"Топ: {top_n(freq_dict)}")  
+```
+
+## Вывод
+![вывод_count_freq_and_top_n](/images/lab03/03.png)
+
+
+## Задание В
+
+
+### text_stats
+```python
+from my_lib.text import tokenize, count_freg, top_n
+import sys
+
+
+table = True
+
+def print_table(top: list[tuple]):
+    """
+    Выводит топ слов с их частотами в табличном формате.
+
+    Форматирует таблицу с двумя столбцами: слово и частота.
+    Ширина столбца "слово" подстраивается под максимальную длину слова из списка.
+
+    Args:
+        top (list[tuple[str, int]]): список кортежей (слово, частота)
+    """
+    max_len = max(len(word) for word, _ in top)
+    col_word = 'слово'
+    col_freq = 'частота'
+
+    width_word = max(max_len, len(col_word))
+    width_freq = len(col_freq)
+    print(f"{col_word:<{width_word}} | {col_freq}")
+    print("-" * width_word + "-+-" + "-" * width_freq)
+
+    for word, count in top:
+        print(f"{word:<{width_word}} | {count}")
+
+
+def main():
+    """
+    Основная функция программы.
+
+    Считывает текст из стандартного ввода, нормализует и токенизирует его,
+    подсчитывает частоты слов и выводит общую статистику,
+    а также топ-5 самых частотных слов в табличном или обычном формате
+    в зависимости от флага 'table'.
+    """
+    print('Введите текс(для окончания ввода нажмите Ctrl+D (Linux/Mac) или Ctrl+Z Enter (Windows)):')
+    text = sys.stdin.read()
+
+    tokens = (tokenize(text))
+    freq = (count_freg(tokens))
+
+    print()
+    print(f'Всего слов: {len(tokens)}')
+    print(f'Кол-во уникальных слов {len(freq)}')
+
+    top_5 = top_n(freq, 5)
+
+    if table:
+            print_table(top_5)
+    else:
+        print('Топ-5:', ' '.join(f"{word}:{count}" for word, count in top_5))
+
+if __name__ == "__main__":
+    main()
+```
+## Вывод без таблицы
+
+![Вывод_text_stats](/images/lab03/04.png)
+
+## Вывод с таблицей
+
+![Выыод_таблица](/images/lab03/05.png)
