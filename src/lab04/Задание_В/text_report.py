@@ -40,7 +40,7 @@ def main():
         sys.exit(1)
 
     try:
-        text = input_path.read_text(encoding="utf-8")
+        text = input_path.read_text(encoding="UTF-8")
     except UnicodeDecodeError as e:
         print(f"Ошибка кодировки при чтении {input_path}: {e}")
         sys.exit(1) # принудительно завершаем программу 

@@ -439,7 +439,8 @@ rows = [
 ]
 write_csv(rows, "output/users.csv", header=("ID", "Name", "Age"))
 
-print("\n✅ Файл 'output/users.csv' успешно создан!")
+print("\n Файл 'output/users.csv' успешно создан!")
+
 
 #write_csv([("word","count"),("test",3)], "data/check.csv")
 ```
