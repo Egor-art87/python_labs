@@ -1,5 +1,7 @@
-from my_lib.text import tokenize, count_freg, top_n
 import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+from src.text import tokenize, count_freg, top_n
 
 
 table = True
@@ -36,6 +38,7 @@ def main():
     а также топ-5 самых частотных слов в табличном или обычном формате
     в зависимости от флага 'table'.
     """
+    
     print('Введите текс(для окончания ввода нажмите Ctrl+D (Linux/Mac) или Ctrl+Z Enter (Windows)):')
     text = sys.stdin.read()
 
