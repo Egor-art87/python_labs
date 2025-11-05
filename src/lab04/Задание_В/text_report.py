@@ -35,9 +35,17 @@ def main():
     input_path = Path('data/input.txt')     # путь к входному файлу 
     output_path = Path("data/report.csv")   # путь куда нужно сохранить отчёт
 
-    if not input_path.exists():
-        print(f"Файл {input_path} не найден!")
+    
+    file_extension = os.path.splitext(input_path)[1].lower()
+
+   
+    if file_extension not in ('.txt', '.csv'):
+        print(f'Файл {input_path} находится в неправильном расширении')
         sys.exit(1)
+
+    if not input_path.exists(): # проверяет сузествкет ли файл 
+        print(f"Файл {input_path} не найден!")
+        sys.exit(1) # принудительно завершаем программу 
 
     try:
         text = input_path.read_text(encoding="UTF-8")
