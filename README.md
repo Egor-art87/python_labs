@@ -582,7 +582,7 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
         with json_file.open('r', encoding='utf-8') as f:
             data = json.load(f)
     except json.JSONDecodeError as e:
-        raise ValueError(f'не правильный формат json: {e}')
+        raise ValueError(f'неправильный кодировка json: {e}')
     
     if not isinstance(data, list):
         raise ValueError('json должен быть списком')
@@ -599,6 +599,7 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
 
     csv_file.parent.mkdir(parents=True, exist_ok=True)
 
+    # формирование заголовка
     all_columns = set()
     for item in data:
         all_columns.update(item.keys())
@@ -618,7 +619,6 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
                 value = item.get(column, '')
                 row.append(str(value))
             writer.writerow(row)
-
 ```
 ## Вход
 ![input](/images/lab05/json_to_csv_вход.png)
@@ -635,15 +635,15 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
     """
     csv_file = Path(csv_path)
     if not csv_file.exists():
-        raise FileNotFoundError(f"CSV file {csv_path} not found")
+        raise FileNotFoundError(f"CSV фвйл {csv_path} не существует")
     if csv_file.suffix.lower() != '.csv':
-        raise ValueError(f"Input file must be CSV, got {csv_file.suffix}")
+        raise ValueError(f"фходной файл должен быть csv {csv_file.suffix}")
     try:
         with csv_file.open('r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             
             if reader.fieldnames is None:
-                raise ValueError("CSV file must have a header row")
+                raise ValueError("CSV-файл должен иметь заголовок")
             
             data = list(reader)
             
@@ -651,7 +651,7 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
         raise ValueError(f"Invalid CSV format: {e}")
     
     if len(data) == 0:
-        raise ValueError("CSV file contains no data")
+        raise ValueError("CSV-файл пустой")
     
     json_file = Path(json_path)
     if json_file.suffix.lower() != '.json':
@@ -687,7 +687,7 @@ main()
  ## csv_xlsx
 
  ```python
- import csv
+import csv
 from pathlib import Path
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
@@ -721,27 +721,28 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     except csv.Error as e:
         raise ValueError(f"Invalid CSV format: {e}")
     except UnicodeDecodeError:
-        raise ValueError("CSV file encoding must be UTF-8")
+        raise ValueError("кодировка должна быть UTF-8")
     
     if len(rows) == 0:
         raise ValueError('csv-файл пустой')
     
     if not rows[0] or all(cell.strip() == '' for cell in rows[0]):
-        raise ValueError("CSV file must have a header row")
+        raise ValueError("CSV-файл должен иметь заголовок")
     
     xlsx_file.parent.mkdir(parents=True, exist_ok=True)
 
-    wb = Workbook()
-    ws = wb.active
+    wb = Workbook() # создает новый Excel файл
+    ws = wb.active   # получает активный лист (по умолчанию первый)
     ws.title = 'lst1'
 
+    # запись данных в ячейки
     for row_idx, row in enumerate(rows, 1):
         for col_idx, value in enumerate(row, 1):
             ws.cell(row=row_idx, column=col_idx, value=value)
 
     for column_cells in ws.columns:
         length = max(len(str(cell.value)) for cell in column_cells)
-        adjusted_width = max(length + 2, 8)  # +2 для отступов, минимум 8
+        adjusted_width = max(length + 2, 8)  
         column_letter = get_column_letter(column_cells[0].column)
         ws.column_dimensions[column_letter].width = adjusted_width
 
