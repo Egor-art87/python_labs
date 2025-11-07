@@ -32,13 +32,13 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     except csv.Error as e:
         raise ValueError(f"Invalid CSV format: {e}")
     except UnicodeDecodeError:
-        raise ValueError("CSV file encoding must be UTF-8")
+        raise ValueError("кодировка должна быть UTF-8")
     
     if len(rows) == 0:
         raise ValueError('csv-файл пустой')
     
     if not rows[0] or all(cell.strip() == '' for cell in rows[0]):
-        raise ValueError("CSV file must have a header row")
+        raise ValueError("CSV-файл должен иметь заголовок")
     
     xlsx_file.parent.mkdir(parents=True, exist_ok=True)
 
@@ -52,7 +52,7 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
 
     for column_cells in ws.columns:
         length = max(len(str(cell.value)) for cell in column_cells)
-        adjusted_width = max(length + 2, 8)  # +2 для отступов, минимум 8
+        adjusted_width = max(length + 2, 8)  
         column_letter = get_column_letter(column_cells[0].column)
         ws.column_dimensions[column_letter].width = adjusted_width
 

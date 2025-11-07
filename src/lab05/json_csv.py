@@ -31,7 +31,7 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
         with json_file.open('r', encoding='utf-8') as f:
             data = json.load(f)
     except json.JSONDecodeError as e:
-        raise ValueError(f'не правильный формат json: {e}')
+        raise ValueError(f'неправильный кодировка json: {e}')
     
     if not isinstance(data, list):
         raise ValueError('json должен быть списком')
@@ -48,6 +48,7 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
 
     csv_file.parent.mkdir(parents=True, exist_ok=True)
 
+    # формирование заголовка
     all_columns = set()
     for item in data:
         all_columns.update(item.keys())
@@ -78,15 +79,15 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
     """
     csv_file = Path(csv_path)
     if not csv_file.exists():
-        raise FileNotFoundError(f"CSV file {csv_path} not found")
+        raise FileNotFoundError(f"CSV фвйл {csv_path} не существует")
     if csv_file.suffix.lower() != '.csv':
-        raise ValueError(f"Input file must be CSV, got {csv_file.suffix}")
+        raise ValueError(f"фходной файл должен быть csv {csv_file.suffix}")
     try:
         with csv_file.open('r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             
             if reader.fieldnames is None:
-                raise ValueError("CSV file must have a header row")
+                raise ValueError("CSV-файл должен иметь заголовок")
             
             data = list(reader)
             
@@ -94,7 +95,7 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
         raise ValueError(f"Invalid CSV format: {e}")
     
     if len(data) == 0:
-        raise ValueError("CSV file contains no data")
+        raise ValueError("CSV-файл пустой")
     
     json_file = Path(json_path)
     if json_file.suffix.lower() != '.json':
