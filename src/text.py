@@ -78,4 +78,4 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
         return key_v[1]
     my_list.sort(key=sort_po_num, reverse=True)
 
-    return my_list
+    return my_list[:n]

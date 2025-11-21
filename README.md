@@ -756,3 +756,192 @@ csv_to_xlsx('data/out/people.csv', 'data/out/csv_to_xlsx.xlsx')
 
 ## Выход
 ![out](/images/lab05/csv_to_xlsx.png)
+
+# lab06
+
+## cli_text
+
+### КОД
+```python
+import argparse
+import sys
+from pathlib import Path
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+from src.text import tokenize, normalize, top_n, count_freg
+
+
+def run_cat(path: Path, out: Path | None = None, number_lines: bool = False):
+    """Вывод содержимого файла с опциональной нумерацией строк."""
+    if not path.exists():
+        print(f"Ошибка: файл '{path}' не найден!", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        print(f"Ошибка: файл '{path}' не в UTF-8!", file=sys.stderr)
+        sys.exit(1)
+
+    lines = text.splitlines()
+
+    if number_lines:
+        output = "\n".join(f"{i+1:>4}  {line}" for i, line in enumerate(lines))
+    else:
+        output = "\n".join(lines)
+
+    if out:
+        out.write_text(output, encoding="utf-8")
+    else:
+        print(output)
+
+
+def run_stats(path: Path, top: int = 10, out: Path | None = None):
+    """Анализ частоты слов в файле."""
+    if not path.exists():
+        print(f"Ошибка: файл '{path}' не найден!", file=sys.stderr)
+        sys.exit(1)
+
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        print(f"Ошибка: файл '{path}' не в UTF-8!", file=sys.stderr)
+        sys.exit(1)
+
+    tokens = tokenize(text)
+
+    normalized = [normalize(token) for token in tokens]
+    normalized = [t for t in normalized if t]  
+
+    freq = count_freg(normalized)
+
+    top_words = top_n(freq, top)
+
+    if not top_words:
+        print('Нет слов для отображения')
+        return
+    max_len = max(len(word) for word, _ in top_words)
+    col_word = 'слово'
+    col_freq = 'частота'
+
+    width_word = max(max_len, len(col_word))
+    width_freq = len(col_freq)
+    print(f"{col_word:<{width_word}} | {col_freq}")
+    print("-" * width_word + "-+-" + "-" * width_freq)
+
+    for word, count in top_words:
+        print(f"{word:<{width_word}} | {count}")
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(description="CLI-утилиты лабораторной №6")
+    subparsers = parser.add_subparsers(dest="command")
+
+    cat_p = subparsers.add_parser("cat", help="Вывести содержимое файла")
+    cat_p.add_argument("path", type=Path, help="Путь к файлу")
+    cat_p.add_argument("-o", "--out", type=Path, help="Файл для вывода результата")
+    cat_p.add_argument("-n", "--number", action="store_true", help="Нумеровать строки")
+
+    stats_p = subparsers.add_parser("stats", help="Статистика слов")
+    stats_p.add_argument("path", type=Path, help="Путь к файлу")
+    stats_p.add_argument("-k", "--top", type=int, default=10, help="Топ N слов")
+    stats_p.add_argument("-o", "--out", type=Path, help="Файл для вывода результата")
+
+    return parser
+
+
+def main():
+    parser = build_parser()
+    args = parser.parse_args()
+
+    if args.command == "cat":
+        run_cat(args.path, args.out, args.number)
+
+    elif args.command == "stats":
+        run_stats(args.path, args.top, args.out)
+
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
+```
+## Работа cli_text
+### Общая справка по cli_text
+![общая_справка](/images/lab06/Первый_модуль_общая_справка.png)
+### Справка по cat
+![Спр_cat](/images/lab06/Справка_по_cat.png)
+### Справка по stats
+![stats](/images/lab06/справка_по_stats.png)
+### Вывод cat
+![cat](/images/lab06/Первый_модуль_нумерация_строк.png)
+### Нумерация с сохранением в другой файл
+![сохр_cat](/images/lab06/сохранение_в_файл_с_нумерацией_cat.png)
+### Работа stats TOP
+![stats_work](/images/lab06/Топ_из_всех_слов.png)
+### TOP-5
+![t-5](/images/lab06/Топ_5.png)
+
+
+## cli_convert
+
+```python
+import argparse
+import sys
+import os
+
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+from lab05.json_csv import json_to_csv, csv_to_json
+from lab05.csv_xlsx import csv_to_xlsx
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Конвертеры данных")
+    sub = parser.add_subparsers(dest="cmd")
+
+    p1 = sub.add_parser("json2csv")
+    p1.add_argument("--in", dest="input", required=True)
+    p1.add_argument("--out", dest="output", required=True)
+
+    p2 = sub.add_parser("csv2json")
+    p2.add_argument("--in", dest="input", required=True)
+    p2.add_argument("--out", dest="output", required=True)
+
+    p3 = sub.add_parser("csv2xlsx")
+    p3.add_argument("--in", dest="input", required=True)
+    p3.add_argument("--out", dest="output", required=True)
+
+    args = parser.parse_args()
+
+    if args.cmd == "json2csv":
+        json_to_csv(args.input, args.output)
+
+    elif args.cmd == "csv2json":
+        csv_to_json(args.input, args.output)
+
+    elif args.cmd == "csv2xlsx":
+        csv_to_xlsx(args.input, args.output)
+
+    else:
+        parser.print_help()
+
+
+if __name__ == "__main__":
+    main()
+```
+## Работа cli_convert
+
+### Справка по Cli_convert
+![справка_convert](/images/lab06/Справка_по_коевектору.png)
+
+### json -> csv
+![k](/images/lab06/json2csv_команда.png)![v](/images/lab06/json2csv_вывод.png)
+
+### csv -> xlsx
+![k](/images/lab06/csv2xlsx_команда.png)![v](/images/lab06/csv2xlsx_вывод.png)
+
+### csv -> json
+![k](/images/lab06/csv2json_команда.png)![v](/images/lab06/csv2json_вывод.png)
