@@ -197,4 +197,4 @@ if __name__ == "__main__":
     pytest.main([__file__, "-v"])
 ```
 ## Запуск тестов с покрытием
-[json_csv_test](/images/lab07/test_json_csv.png)
+![json_csv_test](/images/lab07/test_json_csv.png)
