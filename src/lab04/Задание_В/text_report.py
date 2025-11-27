@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-from src.text import tokenize, count_freg, top_n, normalize
+from lib.text import tokenize, count_freg, top_n, normalize
 import csv
 from pathlib import Path
 

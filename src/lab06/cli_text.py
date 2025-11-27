@@ -2,8 +2,8 @@ import argparse
 import sys
 from pathlib import Path
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-from src.text import tokenize, normalize, top_n, count_freg
+#sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+from lib.text import tokenize, normalize, top_n, count_freq
 
 
 def run_cat(path: Path, out: Path | None = None, number_lines: bool = False):
@@ -48,7 +48,7 @@ def run_stats(path: Path, top: int = 10, out: Path | None = None):
     normalized = [normalize(token) for token in tokens]
     normalized = [t for t in normalized if t]  
 
-    freq = count_freg(normalized)
+    freq = count_freq(normalized)
 
     top_words = top_n(freq, top)
 

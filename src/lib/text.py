@@ -1,4 +1,4 @@
-def count_freg(tokens: list[str]) -> dict[str, int]:
+def count_freq(tokens: list[str]) -> dict[str, int]:
     """
     Подсчитывает количество вхождений каждого слова в списке токенов.
 
