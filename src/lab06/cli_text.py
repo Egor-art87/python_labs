@@ -1,10 +1,6 @@
 import argparse
-import sys
 from pathlib import Path
-import os
-
-# sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-from lib.text import tokenize, normalize, top_n, count_freq
+from src.lib.text import tokenize, normalize, top_n, count_freq
 
 
 def run_cat(path: Path, out: Path | None = None, number_lines: bool = False):
