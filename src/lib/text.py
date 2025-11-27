@@ -9,7 +9,8 @@ def count_freq(tokens: list[str]) -> dict[str, int]:
         dict[str, int]: Словарь, где ключ — слово, а значение — количество его вхождений.
     """
     from collections import Counter
-    return dict(Counter(tokens))  # считаем частоты элементов 
+
+    return dict(Counter(tokens))  # считаем частоты элементов
 
 
 def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
@@ -24,18 +25,18 @@ def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
     Returns:
         str: Нормализованный текст.
     """
-    control_character = ['\n', '\t', '\r']
+    control_character = ["\n", "\t", "\r"]
     for char in control_character:
-        text = text.replace(char, ' ')
+        text = text.replace(char, " ")
     words = text.split()
-    text = ' '.join(words)
+    text = " ".join(words)
 
     if yo2e:
-        text = text.replace('ё', 'е').replace('Ё', 'Е')
+        text = text.replace("ё", "е").replace("Ё", "Е")
 
     if casefold:
         text = text.casefold()
-    
+
     return text
 
 
@@ -52,8 +53,11 @@ def tokenize(text: str) -> list[str]:
         list[str]: Список токенов (слов), извлечённых из текста.
     """
     import re
-    p = r'\w+(?:-\w+)*'
-    tokens = re.findall(p, text)  # проверяем совпадения в нашей строке и возвращаем их список
+
+    p = r"\w+(?:-\w+)*"
+    tokens = re.findall(
+        p, text
+    )  # проверяем совпадения в нашей строке и возвращаем их список
     return tokens
 
 
@@ -72,10 +76,12 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
 
     def sort_po_alfavity(key_v):
         return key_v[0]
+
     my_list.sort(key=sort_po_alfavity)
 
     def sort_po_num(key_v):
         return key_v[1]
+
     my_list.sort(key=sort_po_num, reverse=True)
 
     return my_list[:n]

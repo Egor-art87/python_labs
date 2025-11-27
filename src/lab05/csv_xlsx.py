@@ -15,17 +15,17 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     csv_file = Path(csv_path)
 
     if not csv_file.exists():
-        raise FileNotFoundError(f'Файл {csv_file} не найден')
-    
-    if csv_file.suffix.lower() != '.csv':
-        raise ValueError(f'Файл {csv_file} не csv')
-    
+        raise FileNotFoundError(f"Файл {csv_file} не найден")
+
+    if csv_file.suffix.lower() != ".csv":
+        raise ValueError(f"Файл {csv_file} не csv")
+
     xlsx_file = Path(xlsx_path)
-    if xlsx_file.suffix.lower() != '.xlsx':
-        raise ValueError(f'Файл {xlsx_file} не xlsx')
-    
+    if xlsx_file.suffix.lower() != ".xlsx":
+        raise ValueError(f"Файл {xlsx_file} не xlsx")
+
     try:
-        with csv_file.open('r', encoding='utf-8') as f:
+        with csv_file.open("r", encoding="utf-8") as f:
             reader = csv.reader(f)
             rows = list(reader)
 
@@ -33,18 +33,18 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         raise ValueError(f"Invalid CSV format: {e}")
     except UnicodeDecodeError:
         raise ValueError("кодировка должна быть UTF-8")
-    
+
     if len(rows) == 0:
-        raise ValueError('csv-файл пустой')
-    
-    if not rows[0] or all(cell.strip() == '' for cell in rows[0]):
+        raise ValueError("csv-файл пустой")
+
+    if not rows[0] or all(cell.strip() == "" for cell in rows[0]):
         raise ValueError("CSV-файл должен иметь заголовок")
-    
+
     xlsx_file.parent.mkdir(parents=True, exist_ok=True)
 
     wb = Workbook()
     ws = wb.active
-    ws.title = 'lst1'
+    ws.title = "lst1"
 
     for row_idx, row in enumerate(rows, 1):
         for col_idx, value in enumerate(row, 1):
@@ -52,11 +52,11 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
 
     for column_cells in ws.columns:
         length = max(len(str(cell.value)) for cell in column_cells)
-        adjusted_width = max(length + 2, 8)  
+        adjusted_width = max(length + 2, 8)
         column_letter = get_column_letter(column_cells[0].column)
         ws.column_dimensions[column_letter].width = adjusted_width
 
     wb.save(xlsx_path)
 
-csv_to_xlsx('data/out/people.csv', 'data/out/csv_to_xlsx.xlsx')
 
+csv_to_xlsx("data/out/people.csv", "data/out/csv_to_xlsx.xlsx")

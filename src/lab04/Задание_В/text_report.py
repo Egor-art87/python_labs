@@ -1,11 +1,13 @@
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
 from lib.text import tokenize, count_freg, top_n, normalize
 import csv
 from pathlib import Path
 
 table = True
+
 
 def print_table(top: list[tuple]):
     """
@@ -16,11 +18,11 @@ def print_table(top: list[tuple]):
 
     """
     if not top:
-        print('Нет слов для отображения')
+        print("Нет слов для отображения")
         return
     max_len = max(len(word) for word, _ in top)
-    col_word = 'слово'
-    col_freq = 'частота'
+    col_word = "слово"
+    col_freq = "частота"
 
     width_word = max(max_len, len(col_word))
     width_freq = len(col_freq)
@@ -32,48 +34,50 @@ def print_table(top: list[tuple]):
 
 
 def main():
-    input_path = Path('data/input.txt')     # путь к входному файлу 
-    output_path = Path("data/report.csv")   # путь куда нужно сохранить отчёт
+    input_path = Path("data/input.txt")  # путь к входному файлу
+    output_path = Path("data/report.csv")  # путь куда нужно сохранить отчёт
 
-    
     file_extension = os.path.splitext(input_path)[1].lower()
 
-   
-    if file_extension not in ('.txt', '.csv'):
-        print(f'Файл {input_path} находится в неправильном расширении')
+    if file_extension not in (".txt", ".csv"):
+        print(f"Файл {input_path} находится в неправильном расширении")
         sys.exit(1)
 
-    if not input_path.exists(): # проверяет сузествкет ли файл 
+    if not input_path.exists():  # проверяет сузествкет ли файл
         print(f"Файл {input_path} не найден!")
-        sys.exit(1) # принудительно завершаем программу 
+        sys.exit(1)  # принудительно завершаем программу
 
     try:
         text = input_path.read_text(encoding="UTF-8")
     except UnicodeDecodeError as e:
         print(f"Ошибка кодировки при чтении {input_path}: {e}")
-        sys.exit(1) # принудительно завершаем программу 
+        sys.exit(1)  # принудительно завершаем программу
 
     text = normalize(text)
     tokens = tokenize(text)
     freq = count_freg(tokens)
 
     def sort_key(item):
-        '''
-        функция сортировки по частоте 
-        '''
+        """
+        функция сортировки по частоте
+        """
         word, count = item
         return (-count, word)
 
     sorted_items = sorted(freq.items(), key=sort_key)
-     
-     # создание папки и запись csv
-    output_path.parent.mkdir(parents=True, exist_ok=True)  # создаём все недостающие папки
-    with output_path.open("w", newline="", encoding="utf-8") as file: # открывает csv файл для записи
-        writer = csv.writer(file) # создаёт объект, который умеет писать CSV-строки
-        writer.writerow(["word", "count"]) # записывает заголовок таблицы.
-        writer.writerows(sorted_items) # записывает все пары (слово, количество
-    
-    # статистика по тексту 
+
+    # создание папки и запись csv
+    output_path.parent.mkdir(
+        parents=True, exist_ok=True
+    )  # создаём все недостающие папки
+    with output_path.open(
+        "w", newline="", encoding="utf-8"
+    ) as file:  # открывает csv файл для записи
+        writer = csv.writer(file)  # создаёт объект, который умеет писать CSV-строки
+        writer.writerow(["word", "count"])  # записывает заголовок таблицы.
+        writer.writerows(sorted_items)  # записывает все пары (слово, количество
+
+    # статистика по тексту
     total_words = sum(freq.values())
     unique_words = len(freq)
     top5 = top_n(freq, n=5)
@@ -85,6 +89,7 @@ def main():
     if table:
         print("\nТаблица топ слов:")
         print_table(top5)
+
 
 if __name__ == "__main__":
     main()

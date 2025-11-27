@@ -2,7 +2,8 @@ import argparse
 import sys
 from pathlib import Path
 import os
-#sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+
+# sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 from lib.text import tokenize, normalize, top_n, count_freq
 
 
@@ -46,18 +47,18 @@ def run_stats(path: Path, top: int = 10, out: Path | None = None):
     tokens = tokenize(text)
 
     normalized = [normalize(token) for token in tokens]
-    normalized = [t for t in normalized if t]  
+    normalized = [t for t in normalized if t]
 
     freq = count_freq(normalized)
 
     top_words = top_n(freq, top)
 
     if not top_words:
-        print('Нет слов для отображения')
+        print("Нет слов для отображения")
         return
     max_len = max(len(word) for word, _ in top_words)
-    col_word = 'слово'
-    col_freq = 'частота'
+    col_word = "слово"
+    col_freq = "частота"
 
     width_word = max(max_len, len(col_word))
     width_freq = len(col_freq)

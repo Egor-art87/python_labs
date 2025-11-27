@@ -1,9 +1,6 @@
-fio = str(input('Введите своё ФИО: '))
-fio_b = ' '.join(fio.split())
-ini = str(input('Введите свои инициалы: ')).upper().strip()
-print(f'ФИО: {fio_b}')
-print(f'Инициалы: {ini}')
-print(f'Длина: {len(fio_b) + len(ini)}')
-
-
-
+fio = str(input("Введите своё ФИО: "))
+fio_b = " ".join(fio.split())
+ini = str(input("Введите свои инициалы: ")).upper().strip()
+print(f"ФИО: {fio_b}")
+print(f"Инициалы: {ini}")
+print(f"Длина: {len(fio_b) + len(ini)}")
