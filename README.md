@@ -1213,3 +1213,205 @@ if __name__ == "__main__":
 ```
 ## Запуск тестов с покрытием
 ![json_csv_test](/images/lab07/test_json_csv.png)
+
+
+# lab08
+
+## models.py
+
+```python
+from dataclasses import dataclass
+from datetime import datetime, date
+import re
+
+@dataclass
+class Student:
+    fio: str
+    birthdate: str  
+    group: str
+    gpa: float
+    
+    def __post_init__(self):
+        try:
+            datetime.strptime(self.birthdate, "%Y-%m-%d")
+        except ValueError:
+            raise ValueError(f"Неверный формат даты: {self.birthdate}. Ожидается: YYYY-MM-DD")
+        
+        
+        if not (0 <= self.gpa <= 5):
+            raise ValueError(f"GPA должен быть в диапазоне от 0 до 5, получено: {self.gpa}")
+        
+        print(f"Предупреждение: проверьте своё ФИО '{self.fio}'")
+    
+        if not re.match(r'^[A-ZА-ЯЁ]{2,4}-\d{2}-\d{2}$', self.group.upper()):
+            raise ValueError(
+                f"Неверный формат группы: '{self.group}'. "
+                f"Ожидается формат: БУКВЫ-ЦИФРЫ-ЦИФРЫ\n"
+                f"Примеры допустимых групп:\n"
+                f"  - БИВТ-25-07 (русские буквы)\n"
+                f"  - SE-01-02 (английские буквы)\n"
+                f"  - ИВТ-23-01 (русские, 3 буквы)\n"
+                f"  - ABC-12-34 (английские, 3 буквы)\n"
+                f"  - ABCD-56-78 (английские, 4 буквы)"
+            )
+        self.group = self.group.upper()
+
+    def age(self) -> int:
+        birth_date = datetime.strptime(self.birthdate, "%Y-%m-%d").date()
+        today = date.today()
+
+        age = today.year - birth_date.year 
+        if (today.month, today.day) < (birth_date.month, birth_date.day):
+            age -= 1
+
+        return age
+    
+    def to_dict(self) -> dict:
+        return {
+            "fio": self.fio,
+            "birthdate": self.birthdate,
+            "group": self.group,
+            "gpa": self.gpa
+        }
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Student':
+        return cls(
+            fio=data.get("fio", ""),
+            birthdate=data.get("birthdate", ""),
+            group=data.get("group", ""),
+            gpa=data.get("gpa", 0.0)
+        )
+    
+    def __str__(self) -> str:
+        return (f"Студент: {self.fio}\n"
+                f"Группа: {self.group}\n"
+                f"Дата рождения: {self.birthdate} (Возраст: {self.age()} лет)\n"
+                f"Средний балл: {self.gpa}")
+
+
+# Тестирование
+if __name__ == "__main__":
+    try:
+        student = Student(
+            fio='Артюх Егор Андреевич',
+            birthdate='2008-01-02',
+            group='ИВТ-25-07',
+            gpa=4.5
+        )
+        
+        print("=== Метод __str__ ===")
+        print(student.__str__())  
+        print()
+        
+        print("=== Метод to_dict() ===")
+        student_dict = student.to_dict()
+        print(student_dict)
+        print()
+        
+        print("=== Метод from_dict() ===")
+        new_student = Student.from_dict(student_dict)
+        print(new_student)
+        print()
+        
+        print("=== Метод age() ===")
+        print(f"Возраст: {student.age()} лет")
+        
+    except ValueError as e:
+        print(f"Ошибка: {e}")
+```
+### Пример работы 
+![models](/images/lab08/models.png)
+
+## serialize.py
+
+```python
+import json
+from pathlib import Path
+from typing import List
+from models import Student
+
+
+def students_to_json(students: List[Student], path: str) -> None:
+    """Сохраняет список студентов в JSON файл"""
+    if not isinstance(students, list):
+        raise ValueError(f"Ожидается список студентов, получено: {type(students)}")
+    
+    if not students:
+        raise ValueError("Список студентов пуст")
+    
+    for i, student in enumerate(students):
+        if not isinstance(student, Student):
+            raise ValueError(f"Элемент {i} не является объектом Student: {type(student)}")
+    
+    file_path = Path(path)
+    file_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    data = [student.to_dict() for student in students]
+    
+    with file_path.open('w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def students_from_json(path: str) -> List[Student]:
+    """Загружает список студентов из JSON файла"""
+    file_path = Path(path)
+    
+    if not file_path.exists():
+        raise FileNotFoundError(f"Файл не найден: {file_path}")
+    
+    with file_path.open('r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    if not isinstance(data, list):
+        raise ValueError(f"Ожидается список в JSON файле, получено: {type(data)}")
+    
+    students = []
+    
+    for i, item in enumerate(data):
+        if not isinstance(item, dict):
+            raise ValueError(f"Элемент {i} не является словарем: {type(item)}")
+        
+        required_fields = ['fio', 'birthdate', 'group', 'gpa']
+        missing_fields = [field for field in required_fields if field not in item]
+        if missing_fields:
+            raise ValueError(f"Отсутствуют обязательные поля: {missing_fields}")
+        
+        student = Student.from_dict(item)
+        students.append(student)
+    
+    return students
+
+
+# Тестирование модуля
+if __name__ == "__main__":
+    # Создаем папку, если её нет
+    Path("data/lab08").mkdir(parents=True, exist_ok=True)
+    
+    input_path = "data/lab08/students_input.json"
+    output_path = "data/lab08/students_output.json"
+    
+    # Загружаем студентов из входного файла
+    try:
+        students = students_from_json(input_path)
+        
+        # Сохраняем студентов в выходной файл
+        students_to_json(students, output_path)
+        
+    except FileNotFoundError as e:
+        print(f"Ошибка: {e}")
+        print(f"Создайте файл {input_path} со студентами")
+    except Exception as e:
+        print(f"Ошибка: {e}")
+```
+
+## Примеры работы
+
+### консоль
+![consol](/images/lab08/serialize.png)
+
+### входной файл
+![input](/images/lab08/students_input.png)
+
+### выходной файл
+![out](/images/lab08/students_output.png)
