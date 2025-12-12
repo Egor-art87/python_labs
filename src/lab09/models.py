@@ -19,7 +19,6 @@ class Student:
         if not (0 <= self.gpa <= 5):
             raise ValueError(f"GPA должен быть в диапазоне от 0 до 5, получено: {self.gpa}")
         
-        print(f"Предупреждение: проверьте своё ФИО '{self.fio}'")
     
         if not re.match(r'^[A-ZА-ЯЁ]{2,4}-\d{2}-\d{2}$', self.group.upper()):
             raise ValueError(
